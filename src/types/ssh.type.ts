@@ -9,6 +9,7 @@ export interface ConnectionConfig {
   auth_type: string
   password: string | undefined
   privateKey: string | undefined
+  passphrase: string | undefined
   path: string
   php: string | undefined
   client_path: string | undefined

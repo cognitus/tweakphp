@@ -15,9 +15,21 @@ export class SSH {
       username: connectionConfig.username,
       password: '',
       privateKey: '',
+      passphrase: '',
+      authHandler: undefined,
     }
     if (connectionConfig.auth_type === 'password' && connectionConfig.password) {
       this.config.password = connectionConfig.password
+      this.config.authHandler = ['password']
+    }
+    if (connectionConfig.auth_type === 'key-passphrase' && connectionConfig.privateKey && connectionConfig.passphrase) {
+      try {
+        this.config.privateKey = readFileSync(connectionConfig.privateKey, 'utf8')
+        this.config.passphrase = connectionConfig.passphrase
+      } catch (error: any) {
+        //
+      }
+      this.config.authHandler = ['publickey']
     }
     if (connectionConfig.auth_type === 'key' && connectionConfig.privateKey) {
       try {
@@ -25,6 +37,7 @@ export class SSH {
       } catch (error: any) {
         //
       }
+      this.config.authHandler = ['publickey']
     }
     this.conn = new Client()
     this.isConnected = false
