@@ -89,7 +89,6 @@
   }
 
   const connectReply = (e: any) => {
-     console.log(e)
     const reply = e.detail as ConnectReply
     if (reply.data?.state === 'create-ssh') {
       sshStore.setConnecting(false)
