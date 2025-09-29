@@ -9,6 +9,7 @@
   "version": "0.10.0",
   "main": "dist/main.js",
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "dev": "concurrently \"vite\" \"node build.js --dev && electron .\"",
     "update-clients": "node ./scripts/update-clients.js",
     "build": "vite build && node build.js --prod",
@@ -26,8 +27,7 @@
     "appId": "com.tweakphp.app",
     "productName": "TweakPHP",
     "files": [
-      "**/*",
-      "node_modules/**/*"
+      "**/*"
     ],
     "extraResources": [
       "build/*",
@@ -35,7 +35,11 @@
     ],
     "extraFiles": [
       "build/**/*",
-      "public/**/*"
+      "public/**/*",
+      {
+        "from": "migrations",
+        "to": "migrations"
+      }
     ],
     "publish": {
       "provider": "github",
@@ -49,7 +53,7 @@
     "linux": {
       "executableName": "tweakphp",
       "description": "Tweak your PHP code easily",
-      "icon": "./build/icon.icns",
+      "icon": "./build/icon.png",
       "target": [
         "rpm",
         {
@@ -64,7 +68,7 @@
       ],
       "desktop": {
         "Name": "TweakPHP",
-        "icon": "./build/icon.icns",
+        "icon": "./build/icon.png",
         "Comment": "Tweak your PHP code easily",
         "Categories": "Development"
       },
@@ -111,6 +115,11 @@
     },
     "afterSign": "scripts/notarize.js"
   },
+  "dependencies": {
+    "better-sqlite3": "^12.1.1",
+    "js-yaml": "^4.1.0",
+    "reka-ui": "^2.4.1"
+  },
   "devDependencies": {
     "@codingame/esbuild-import-meta-url-plugin": "~1.0.2",
     "@codingame/monaco-vscode-configuration-service-override": "~7.0.7",
@@ -123,9 +132,11 @@
     "@codingame/monaco-vscode-textmate-service-override": "~7.0.7",
     "@codingame/monaco-vscode-theme-defaults-default-extension": "~7.0.7",
     "@codingame/monaco-vscode-theme-service-override": "~7.0.7",
+    "@electron/rebuild": "^4.0.1",
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.1.3",
     "@types/adm-zip": "^0.5.7",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.2",
@@ -135,6 +146,7 @@
     "@types/ssh2": "^1.15.1",
     "@types/ws": "^8.5.13",
     "@vitejs/plugin-vue": "^5.2.1",
+    "@vueuse/core": "^13.4.0",
     "adm-zip": "^0.5.16",
     "autoprefixer": "^10.4.19",
     "bufferutil": "^4.0.8",
@@ -165,7 +177,7 @@
     "tippy.js": "^6.3.7",
     "typescript": "^5.2.2",
     "utf-8-validate": "^5.0.10",
-    "vite": "^6.3.5",
+    "vite": "^6.3.6",
     "vscode-jsonrpc": "^8.2.1",
     "vscode-languageclient": "^9.0.1",
     "vscode-languageserver": "^9.0.1",
@@ -174,10 +186,7 @@
     "vue-router": "^4.3.0",
     "vue-tippy": "^6.4.4",
     "vue-tsc": "^2.0.26",
-    "ws": "^8.17.0"
-  },
-  "dependencies": {
-    "js-yaml": "^4.1.0",
-    "reka-ui": "^2.4.1"
+    "ws": "^8.17.0",
+    "zod": "^3.25.67"
   }
 }

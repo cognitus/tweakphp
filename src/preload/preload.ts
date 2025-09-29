@@ -32,3 +32,36 @@ contextBridge.exposeInMainWorld('ipcRenderer', ipcRendererHandler)
 contextBridge.exposeInMainWorld('platformInfo', {
   getPlatform: () => os.platform(),
 })
+
+/**
+ * Exposes the `historyApi` to the renderer process.
+ */
+contextBridge.exposeInMainWorld('historyApi', {
+  add: (tabId: number, code: string, cursor: monaco.IPosition) => {
+    ipcRenderer.send('code-add', { tabId, code, cursor })
+  },
+  undo: (tabId: number) => {
+    ipcRenderer.send('code-undo', tabId)
+  },
+  redo: (tabId: number) => {
+    ipcRenderer.send('code-redo', tabId)
+  },
+  onUndoReply: (callback: (data: { code: string; cursor: monaco.IPosition }) => void) => {
+    ipcRenderer.on('code-undo.reply', (_event, args) => {
+      if (args.data) {
+        callback(args.data)
+      }
+    })
+  },
+  onRedoReply: (callback: (data: { code: string; cursor: monaco.IPosition }) => void) => {
+    ipcRenderer.on('code-redo.reply', (_event, args) => {
+      if (args.data) {
+        callback(args.data)
+      }
+    })
+  },
+  removeAllListeners: () => {
+    ipcRenderer.removeAllListeners('code-undo.reply')
+    ipcRenderer.removeAllListeners('code-redo.reply')
+  },
+})
